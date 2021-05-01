@@ -1,5 +1,6 @@
 package it.polito.tdp.extflightdelays.model;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,13 +23,26 @@ public class Model {
 		idMap= new HashMap<Integer,Airport>();
 	}
 	
+	private List<Adiacenza> getAdiacenze(){
+		return dao.getAllAdiacenze();
+	}
+	
+	private List<Adiacenza> getAdiacenzeValide(double distanza){
+		List<Adiacenza> valide = new ArrayList<Adiacenza>();
+		for (Adiacenza a : getAdiacenze()) {
+			if ( a.getPeso()>distanza)
+				valide.add(a);
+		}
+		return valide;
+	}
+	
 	public void creaGrafo(double distanza) {
 		this.grafo= new SimpleWeightedGraph(DefaultWeightedEdge.class);
 		
 		dao.loadAllAirports(idMap);
 		Graphs.addAllVertices(grafo, idMap.values());
 		
-		for (Adiacenza a : dao.getAllAdiacenze()) {
+		for (Adiacenza a : getAdiacenze()) {
 			if ( a.getPeso()>distanza)
 				Graphs.addEdge(grafo, idMap.get(a.getId1()), idMap.get(a.getId2()), a.getPeso());
 		}
@@ -37,10 +51,19 @@ public class Model {
 		System.out.println("# archi: "+grafo.edgeSet().size());
 	}
 	
-	public String stampaArchiConDistanza() {
-		for (DefaultWeightedEdge e: grafo.edgeSet()) {
-		}
+	public String stampaNumArchi() {
+		return ("# Archi: "+grafo.edgeSet().size());
+	}
+	
+	public String stampaNumVertici() {
+		return ("# Vertici: "+grafo.vertexSet().size());
+	}
+	
+	public String stampaArchiConDistanza(double distanza) {
 		String s="";
+		for(Adiacenza a : this.getAdiacenzeValide(distanza)) {
+			s+= "Arco con gl id: ("+a.getId1()+","+a.getId2()+") con distanza media: "+a.getPeso()+"\n";
+		}
 		return s;
 	}
 }

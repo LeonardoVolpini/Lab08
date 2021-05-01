@@ -5,8 +5,9 @@ public class TestModel {
 	public static void main(String[] args) {
 		
 		Model model = new Model();
-		model.creaGrafo(1000);
-		model.stampaArchiConDistanza();
+		double dist=1000;
+		model.creaGrafo(dist);
+		model.stampaArchiConDistanza(dist);
 	}
 
 }
