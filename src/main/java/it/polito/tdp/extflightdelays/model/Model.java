@@ -2,6 +2,7 @@ package it.polito.tdp.extflightdelays.model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -33,7 +34,8 @@ public class Model {
 			if ( a.getPeso()>distanza)
 				valide.add(a);
 		}
-		return valide;
+		List<Adiacenza> temp = new ArrayList<>(new LinkedHashSet<Adiacenza>(valide));
+		return temp;
 	}
 	
 	public void creaGrafo(double distanza) {
@@ -62,7 +64,7 @@ public class Model {
 	public String stampaArchiConDistanza(double distanza) {
 		String s="";
 		for(Adiacenza a : this.getAdiacenzeValide(distanza)) {
-			s+= "Arco con gl id: ("+a.getId1()+","+a.getId2()+") con distanza media: "+a.getPeso()+"\n";
+			s+= "Rotta: "+idMap.get(a.getId1()).getAirportName()+" - "+idMap.get(a.getId2()).getAirportName()+" con distanza media: "+a.getPeso()+"\n";
 		}
 		return s;
 	}
